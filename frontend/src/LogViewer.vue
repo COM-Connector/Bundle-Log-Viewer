@@ -2,47 +2,25 @@
 import FileTree from '@/components/FileTree.vue'
 import {useRoute} from 'vue-router';
 
-const route   = useRoute();
-const homeUri = document.head.querySelector<HTMLMetaElement>('[name=home-uri]')!.content;
+const route = useRoute();
 </script>
 
 <template>
-    <div class="slv-sidebar h-100 overflow-hidden">
-        <header class="slv-header-height slv-header bg-body position-relative">
-            <a :href="homeUri" class="slv-back text-decoration-none">
-                <i class="bi bi-arrow-left-short"></i>Back
-            </a>
+    <header class="slv-header bg-body border rounded d-flex align-items-center px-3 py-2">
+        <i class="bi bi-substack me-2"></i>
+        <span class="fw-semibold text-nowrap">Log Viewer</span>
+        <!-- target for view specific actions, e.g. the search form -->
+        <div id="slv-header-actions" class="d-flex flex-grow-1 ms-4"></div>
+    </header>
 
-            <h4 class="d-block text-center slv-app-title m-0">
-                <i class="bi bi-substack slv-icon-color"></i>
-                Log viewer </h4>
-        </header>
-
+    <div class="h-100 overflow-hidden">
         <FileTree/>
     </div>
     <RouterView :key="route.fullPath"></RouterView>
 </template>
 
 <style scoped>
-.slv-app-title {
-    color: rgb(2, 132, 199);
-    height: var(--slv-min-header-height);
-    line-height: var(--slv-min-header-height);
-}
-
-.slv-sidebar {
-    display: grid;
-    grid-template-rows: auto 1fr;
-}
-
-.slv-back {
-    position: absolute;
-    left: 0;
-    height: var(--slv-min-header-height);
-    line-height: var(--slv-min-header-height);
-}
-
-.slv-icon-color {
-    color: #fff;
+.slv-header {
+    grid-column: 1 / -1;
 }
 </style>

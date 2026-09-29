@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="me-4 small d-inline-block" v-if="performance !== undefined">
+    <div class="small d-inline-block" v-if="performance !== undefined">
         <span class="small">Memory: {{ performance.memoryUsage }}</span>
         &centerdot;
         <span class="small">Duration: {{ performance.requestTime }}</span>

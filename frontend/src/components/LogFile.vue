@@ -47,56 +47,50 @@ const navigate = (identifier: string, multiSelect: boolean) => {
 
 <template>
     <!-- LogFile -->
-    <button-group ref="toggleRef" alignment="right" :split="true" class="mb-1" :hide-on-selected="true">
-        <template v-slot:btn_left>
-            <a @click="(event) => {event.preventDefault(); navigate(file.identifier, event.ctrlKey || event.metaKey)}"
-               href="javascript:"
-               class="btn btn-file text-start btn-outline-primary w-100"
-               v-bind:class="{'btn-outline-primary-active': searchStore.files.includes(file.identifier) }"
-               :title="file.name">
-                <span class="d-block text-nowrap overflow-hidden">{{ file.name }}</span>
-                <span class="d-block file-size text-secondary text-nowrap overflow-hidden">{{ file.size_formatted }}</span>
-            </a>
-        </template>
-        <template v-slot:btn_right>
-            <button type="button"
-                    class="slv-toggle-btn btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
-                    v-bind:class="{'btn-outline-primary-active': searchStore.files.includes(file.identifier) }"
-                    @click="toggleRef.toggle">
-                <i class="bi bi-three-dots-vertical"></i>
-            </button>
-        </template>
-        <template v-slot:dropdown>
-            <li>
-                <a class="dropdown-item" href="javascript:" @click="navigate(file.identifier, true)">
-                    <i class="bi bi-check2-circle me-3"></i>{{ searchStore.files.includes(file.identifier) ? 'Deselect' : 'Select' }}
-                    <code>(ctrl+click)</code>
-                </a>
-            </li>
-            <li v-if="file.can_download">
-                <a class="dropdown-item"
-                   :href="baseUri + 'api/file/' + encodeURI(file.identifier) + '?' + new ParameterBag().set('host', hostsStore.selected, 'localhost').toString()">
-                    <i class="bi bi-cloud-download me-3"></i>Download
-                </a>
-            </li>
-            <li v-if="file.can_delete">
-                <a class="dropdown-item" href="javascript:" @click="deleteFile(file.identifier)">
-                    <i class="bi bi-trash3 me-3"></i>Delete
-                </a>
-            </li>
-        </template>
-    </button-group>
+    <div class="list-group-item list-group-item-action d-flex align-items-center p-0"
+         :class="{'slv-file-active': searchStore.files.includes(file.identifier)}">
+        <a @click="(event) => {event.preventDefault(); navigate(file.identifier, event.ctrlKey || event.metaKey)}"
+           href="javascript:"
+           class="slv-file-link d-flex flex-grow-1 px-3 py-2 text-body text-decoration-none"
+           :title="file.name">
+            <span class="flex-grow-1 text-truncate">{{ file.name }}</span>
+            <span class="text-body-secondary small text-nowrap ms-2">{{ file.size_formatted }}</span>
+        </a>
+        <button-group ref="toggleRef" alignment="right" :hide-on-selected="true">
+            <template v-slot:btn_left>
+                <button type="button" class="btn btn-link btn-sm text-body" aria-label="File menu" @click="toggleRef.toggle">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+            </template>
+            <template v-slot:dropdown>
+                <li>
+                    <a class="dropdown-item" href="javascript:" @click="navigate(file.identifier, true)">
+                        <i class="bi bi-check2-circle me-3"></i>{{ searchStore.files.includes(file.identifier) ? 'Deselect' : 'Select' }}
+                        <code>(ctrl+click)</code>
+                    </a>
+                </li>
+                <li v-if="file.can_download">
+                    <a class="dropdown-item"
+                       :href="baseUri + 'api/file/' + encodeURI(file.identifier) + '?' + new ParameterBag().set('host', hostsStore.selected, 'localhost').toString()">
+                        <i class="bi bi-cloud-download me-3"></i>Download
+                    </a>
+                </li>
+                <li v-if="file.can_delete">
+                    <a class="dropdown-item" href="javascript:" @click="deleteFile(file.identifier)">
+                        <i class="bi bi-trash3 me-3"></i>Delete
+                    </a>
+                </li>
+            </template>
+        </button-group>
+    </div>
 </template>
 
 <style scoped>
-.file-size {
-    font-size: 0.75rem;
-    padding-top: 6px;
+.slv-file-link {
+    min-width: 0;
 }
 
-.btn-file {
-    display: grid;
-    grid-column-gap: 5px;
-    grid-template-columns: 1fr auto;
+.slv-file-active {
+    box-shadow: inset 3px 0 0 var(--bs-primary);
 }
 </style>

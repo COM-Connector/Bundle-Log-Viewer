@@ -16,38 +16,21 @@ bus.on('folder-deleted', () => folderStore.update());
 
 <template>
     <!-- FileTree -->
-    <div class="p-1 pe-2 overflow-auto">
-        <div class="slv-control-layout m-0">
-            <div>
-                <select class="form-select pb-0 pt-0 ps-0 slv-form-select border-0"
-                        v-model="hostsStore.selected"
-                        v-if="Object.keys(hostsStore.hosts).length > 0">
-                    <option v-for="(name, key) in hostsStore.hosts" :value="key" :key="key">{{ name }}</option>
-                </select>
-            </div>
-            <div></div>
-            <div>
-                <select class="form-select pb-0 pt-0 ps-0 slv-form-select border-0" v-model="folderStore.direction" v-on:change="folderStore.update">
-                    <option value="desc">Newest First</option>
-                    <option value="asc">Oldest First</option>
-                </select>
-            </div>
+    <div class="card h-100 overflow-hidden">
+        <div class="card-header border-bottom-0 d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm w-auto"
+                    v-model="hostsStore.selected"
+                    v-if="Object.keys(hostsStore.hosts).length > 0">
+                <option v-for="(name, key) in hostsStore.hosts" :value="key" :key="key">{{ name }}</option>
+            </select>
+            <select class="form-select form-select-sm w-auto ms-auto" aria-label="Sort direction" v-model="folderStore.direction" v-on:change="folderStore.update">
+                <option value="desc">Newest First</option>
+                <option value="asc">Oldest First</option>
+            </select>
         </div>
 
-        <div class="slv-loadable" v-bind:class="{ 'slv-loading': folderStore.loading }">
+        <div class="slv-loadable overflow-auto" v-bind:class="{ 'slv-loading': folderStore.loading }">
             <log-folder :folder="folder" :expand="true" :key="index" v-for="(folder, index) in folderStore.folders"/>
         </div>
     </div>
 </template>
-
-<style scoped>
-.slv-control-layout {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-}
-
-.slv-form-select {
-    padding-right: 1.8rem;
-    background-position: right 0.35rem center;
-}
-</style>

@@ -42,40 +42,40 @@ onMounted(() => expanded.value = props.expand);
 
 <template>
     <!-- LogFolder -->
-    <div class="folder-group mt-1" :aria-expanded="expanded">
-        <button-group ref="toggleRef" alignment="right" :split="true" :hide-on-selected="true">
-            <template v-slot:btn_left>
-                <button type="button" class="btn btn-outline-primary text-start w-100" @click="expanded = !expanded">
-                    <i class="slv-indicator bi bi-chevron-right me-2"></i>
-                    <span class="text-nowrap">{{ folder.path }}</span>
-                </button>
-            </template>
-            <template v-slot:btn_right>
-                <button type="button" class="slv-toggle-btn btn btn-outline-primary dropdown-toggle dropdown-toggle-split" @click="toggleRef.toggle">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-            </template>
-            <template v-slot:dropdown>
-                <li>
-                    <a class="dropdown-item" href="javascript:" @click="selectAll(folder.files)">
-                        <i class="bi bi-check2-circle me-3"></i>Select all
-                    </a>
-                </li>
-                <li v-if="folder.can_download">
-                    <a class="dropdown-item"
-                       :href="baseUri + 'api/folder/' + encodeURI(folder.identifier) + '?' + new ParameterBag().set('host', hostsStore.selected, 'localhost').toString()">
-                        <i class="bi bi-cloud-download me-3"></i>Download
-                    </a>
-                </li>
-                <li v-if="folder.can_delete">
-                    <a class="dropdown-item" href="javascript:" @click="deleteFile(folder.identifier)">
-                        <i class="bi bi-trash3 me-3"></i>Delete
-                    </a>
-                </li>
-            </template>
-        </button-group>
+    <div :aria-expanded="expanded">
+        <div class="bg-body-tertiary border-top border-bottom d-flex align-items-center">
+            <button type="button" class="btn btn-link text-body text-decoration-none text-start flex-grow-1 text-truncate" @click="expanded = !expanded">
+                <i class="slv-indicator bi bi-chevron-right me-2"></i>
+                <span class="text-nowrap">{{ folder.path }}</span>
+            </button>
+            <button-group ref="toggleRef" alignment="right" :hide-on-selected="true">
+                <template v-slot:btn_left>
+                    <button type="button" class="btn btn-link text-body" aria-label="Folder menu" @click="toggleRef.toggle">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                </template>
+                <template v-slot:dropdown>
+                    <li>
+                        <a class="dropdown-item" href="javascript:" @click="selectAll(folder.files)">
+                            <i class="bi bi-check2-circle me-3"></i>Select all
+                        </a>
+                    </li>
+                    <li v-if="folder.can_download">
+                        <a class="dropdown-item"
+                           :href="baseUri + 'api/folder/' + encodeURI(folder.identifier) + '?' + new ParameterBag().set('host', hostsStore.selected, 'localhost').toString()">
+                            <i class="bi bi-cloud-download me-3"></i>Download
+                        </a>
+                    </li>
+                    <li v-if="folder.can_delete">
+                        <a class="dropdown-item" href="javascript:" @click="deleteFile(folder.identifier)">
+                            <i class="bi bi-trash3 me-3"></i>Delete
+                        </a>
+                    </li>
+                </template>
+            </button-group>
+        </div>
 
-        <div class="ms-2 mt-1" v-show="expanded">
+        <div class="list-group list-group-flush" v-show="expanded">
             <log-file :file="file" :key="index" v-for="(file, index) in folder.files"/>
         </div>
     </div>
