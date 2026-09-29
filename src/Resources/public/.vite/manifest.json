@@ -1,0 +1,12 @@
+{
+  "src/main.ts": {
+    "file": "assets/main-DJuGwlma.js",
+    "name": "main",
+    "src": "src/main.ts",
+    "isEntry": true
+  },
+  "style.css": {
+    "file": "assets/style-C6tzD47f.css",
+    "src": "style.css"
+  }
+}

@@ -22,7 +22,7 @@ const levelClasses: Record<string, string> = {
     emergency: 'slv-level-severe',
 };
 
-const levelClass = (level: string): string => levelClasses[level.toLowerCase()] ?? levelClasses.info;
+const levelClass = (level: string): string => levelClasses[level.toLowerCase()] ?? levelClasses.info!;
 
 function click(value: string) {
     emit('search', value);
