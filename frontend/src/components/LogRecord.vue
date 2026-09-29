@@ -7,11 +7,33 @@ import {ref} from 'vue';
 
 const expanded = ref(false);
 const styled   = ref(true);
-defineProps<{ logRecord: LogRecord }>()
+const copied   = ref(false);
+const props    = defineProps<{ logRecord: LogRecord }>()
 const emit = defineEmits(['search']);
+
+const levelClasses: Record<string, string> = {
+    debug: 'bg-secondary-subtle text-secondary-emphasis',
+    info: 'bg-info-subtle text-info-emphasis',
+    notice: 'bg-primary-subtle text-primary-emphasis',
+    warning: 'text-bg-warning',
+    error: 'text-bg-danger',
+    critical: 'slv-level-severe',
+    alert: 'slv-level-severe',
+    emergency: 'slv-level-severe',
+};
+
+const levelClass = (level: string): string => levelClasses[level.toLowerCase()] ?? levelClasses.info;
 
 function click(value: string) {
     emit('search', value);
+}
+
+function copy() {
+    const blocks = [props.logRecord.context, props.logRecord.extra].filter(data => !isEmptyJson(data)).map(prettyFormatJson);
+    navigator.clipboard.writeText(blocks.join('\n\n')).then(() => {
+        copied.value = true;
+        setTimeout(() => copied.value = false, 1500);
+    });
 }
 </script>
 
@@ -23,7 +45,7 @@ function click(value: string) {
             <i class="slv-indicator bi bi-chevron-right me-1"></i>
             <span class="slv-time pe-2 text-body-secondary">{{ logRecord.datetime }}</span>
             <span class="badge bg-secondary-subtle text-secondary-emphasis me-1" v-if="logRecord.channel.length > 0">{{ logRecord.channel }}</span>
-            <span :class="['badge me-2', logRecord.level_class.replace('text-', 'text-bg-')]">{{ logRecord.level_name }}</span>
+            <span :class="['badge me-2', levelClass(logRecord.level_name)]">{{ logRecord.level_name }}</span>
 
             <!-- log message -->
             <span v-if="!expanded" v-text="logRecord.text.substring(0, 500)"></span>
@@ -31,7 +53,12 @@ function click(value: string) {
         </div>
         <div class="px-3 pb-2" v-if="expanded">
             <div class="bg-body-tertiary border rounded p-2 position-relative">
-                <button class="btn btn-outline-secondary slv-btn-raw" @click="styled = !styled">{{ styled ? 'raw' : 'styled' }}</button>
+                <div class="slv-btn-actions">
+                <button class="btn btn-sm btn-outline-secondary" type="button" title="Copy" aria-label="Copy" @click="copy">
+                    <i class="bi" :class="copied ? 'bi-check2' : 'bi-clipboard'"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary ms-1" @click="styled = !styled">{{ styled ? 'raw' : 'styled' }}</button>
+            </div>
                 <div v-if="!isEmptyJson(logRecord.context)">
                     <div class="fw-bold">Context:</div>
                     <json-data v-if="styled" path="context:" :data=logRecord.context @click="click"></json-data>
@@ -64,12 +91,14 @@ function click(value: string) {
     font-variant-numeric: tabular-nums;
 }
 
-.slv-btn-raw {
+.slv-btn-actions {
     position: absolute;
     top: 5px;
     right: 5px;
-    --bs-btn-padding-y: .25rem;
-    --bs-btn-padding-x: .5rem;
-    --bs-btn-font-size: .75rem;
+}
+
+.slv-level-severe {
+    background-color: var(--bs-danger-text-emphasis);
+    color: var(--bs-body-bg);
 }
 </style>
