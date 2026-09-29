@@ -23,11 +23,9 @@ const repeater       = new Repeater(5000, () => load(false));
 
 const searchRef   = ref<InstanceType<typeof SearchForm>>()
 const offset      = ref(0);
-const fileNames   = computed(() => folderStore.folders
+const selectedFiles = computed(() => folderStore.folders
         .flatMap(folder => folder.files)
-        .filter(file => searchStore.files.includes(file.identifier))
-        .map(file => file.name)
-        .join(', '));
+        .filter(file => searchStore.files.includes(file.identifier)));
 const badRequest  = ref(false);
 
 const navigate = () => {
@@ -93,44 +91,47 @@ function onSearchRequest(value: string) {
 </script>
 
 <template>
-    <div class="slv-content h-100 overflow-hidden">
-        <div class="d-flex align-items-stretch pt-1">
-            <search-form class="flex-grow-1"
-                         ref="searchRef"
-                         :bad-request="badRequest"
-                         v-model:query="searchStore.query"
-                         v-model:between="searchStore.between"
-                         v-model:sort="searchStore.sort"
-                         v-model:perPage="searchStore.perPage"
-                         @navigate="navigate"></search-form>
+    <teleport to="#slv-header-actions" defer>
+        <search-form class="flex-grow-1"
+                     ref="searchRef"
+                     :bad-request="badRequest"
+                     v-model:query="searchStore.query"
+                     v-model:between="searchStore.between"
+                     v-model:sort="searchStore.sort"
+                     v-model:perPage="searchStore.perPage"
+                     @navigate="navigate"></search-form>
+    </teleport>
 
-            <button class="btn btn-outline-secondary ms-1"
+    <div class="card h-100 overflow-hidden">
+        <div class="card-header d-flex align-items-center">
+            <div class="flex-grow-1 text-truncate">
+                <span class="me-3" v-for="file in selectedFiles" :key="file.identifier">
+                    <i class="bi bi-file-earmark-text me-1"></i>{{ file.name }}
+                    <span class="text-body-secondary small ms-1">{{ file.size_formatted }}</span>
+                </span>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary ms-2"
                     type="button"
                     aria-label="Auto refresh every 5 seconds"
                     title="Auto refresh every 5 seconds"
                     @click="browserStore.autorefresh = !browserStore.autorefresh; repeater.start(browserStore.autorefresh)">
                 <i class="bi" :class="{'bi-play-fill': !browserStore.autorefresh, 'bi-pause-fill': browserStore.autorefresh}"></i>
             </button>
-            <button class="btn btn-outline-secondary ms-1 me-1" type="button" aria-label="Refresh" title="Refresh" @click="load(true)">
+            <button class="btn btn-sm btn-outline-secondary ms-1" type="button" aria-label="Refresh" title="Refresh" @click="load(true)">
                 <i class="bi bi-arrow-clockwise"></i>
             </button>
         </div>
 
-        <main class="overflow-auto d-none d-md-block slv-loadable" v-bind:class="{ 'slv-loading': logRecordStore.loading }">
-            <div class="card slv-entries mt-1 me-1 mb-3">
-                <div class="card-header text-truncate">
-                    <i class="bi bi-file-earmark-text me-1"></i>{{ fileNames }}
-                </div>
-                <div class="list-group list-group-flush">
-                    <log-record :logRecord="record"
-                                v-for="(record, index) in logRecordStore.records.logs ?? []"
-                                v-bind:key="index"
-                                @search="onSearchRequest"></log-record>
-                </div>
+        <main class="flex-grow-1 overflow-auto d-none d-md-block slv-loadable" v-bind:class="{ 'slv-loading': logRecordStore.loading }">
+            <div class="list-group list-group-flush">
+                <log-record :logRecord="record"
+                            v-for="(record, index) in logRecordStore.records.logs ?? []"
+                            v-bind:key="index"
+                            @search="onSearchRequest"></log-record>
             </div>
         </main>
 
-        <footer class="pt-1 pb-1 d-flex" v-show="!logRecordStore.loading">
+        <footer class="card-footer d-flex align-items-center" v-show="!logRecordStore.loading">
             <button class="btn btn-sm btn-outline-secondary"
                     @click="offset = 0; navigate()"
                     v-bind:disabled="logRecordStore.records.paginator?.first !== true">
@@ -148,10 +149,3 @@ function onSearchRequest(value: string) {
         </footer>
     </div>
 </template>
-
-<style scoped>
-.slv-content {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-}
-</style>

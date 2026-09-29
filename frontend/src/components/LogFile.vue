@@ -48,10 +48,10 @@ const navigate = (identifier: string, multiSelect: boolean) => {
 <template>
     <!-- LogFile -->
     <div class="list-group-item list-group-item-action d-flex align-items-center p-0"
-         :class="{'bg-body-secondary': searchStore.files.includes(file.identifier)}">
+         :class="{'slv-file-active': searchStore.files.includes(file.identifier)}">
         <a @click="(event) => {event.preventDefault(); navigate(file.identifier, event.ctrlKey || event.metaKey)}"
            href="javascript:"
-           class="slv-file-link d-flex flex-grow-1 px-2 py-1 text-body text-decoration-none"
+           class="slv-file-link d-flex flex-grow-1 px-3 py-2 text-body text-decoration-none"
            :title="file.name">
             <span class="flex-grow-1 text-truncate">{{ file.name }}</span>
             <span class="text-body-secondary small text-nowrap ms-2">{{ file.size_formatted }}</span>
@@ -88,5 +88,9 @@ const navigate = (identifier: string, multiSelect: boolean) => {
 <style scoped>
 .slv-file-link {
     min-width: 0;
+}
+
+.slv-file-active {
+    box-shadow: inset 3px 0 0 var(--bs-primary);
 }
 </style>

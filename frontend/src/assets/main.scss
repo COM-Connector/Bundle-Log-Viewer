@@ -1,6 +1,5 @@
 :root {
     --slv-max-sidebar-width: 450px;
-    --slv-min-header-height: 45px;
     --slv-min-sidebar-width: 250px;
 }
 
@@ -13,11 +12,8 @@
 .slv-body-grid {
     display: grid;
     grid-template-columns: minmax(var(--slv-min-sidebar-width), min(25%, var(--slv-max-sidebar-width))) 1fr;
-}
-
-.slv-header-height {
-    box-sizing: border-box;
-    min-height: var(--slv-min-header-height);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1rem;
 }
 
 .slv-indicator::before {

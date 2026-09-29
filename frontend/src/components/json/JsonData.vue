@@ -16,7 +16,7 @@ function click(value: string) {
              v-bind:key="key"
              class="slv-indent"
              :class="{'slv-key-value': Objects.isObject(value) === false && Array.isArray(value) === false }">
-            <div class="text-warning">{{ key }}:</div>
+            <div class="text-body-secondary">{{ key }}:</div>
             <json-value :path="props.path + key + '.'" :data=value @click=click></json-value>
         </div>
     </div>

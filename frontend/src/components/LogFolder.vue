@@ -42,8 +42,8 @@ onMounted(() => expanded.value = props.expand);
 
 <template>
     <!-- LogFolder -->
-    <div class="card mt-2" :aria-expanded="expanded">
-        <div class="card-header d-flex align-items-center p-0">
+    <div :aria-expanded="expanded">
+        <div class="bg-body-tertiary border-top border-bottom d-flex align-items-center">
             <button type="button" class="btn btn-link text-body text-decoration-none text-start flex-grow-1 text-truncate" @click="expanded = !expanded">
                 <i class="slv-indicator bi bi-chevron-right me-2"></i>
                 <span class="text-nowrap">{{ folder.path }}</span>
