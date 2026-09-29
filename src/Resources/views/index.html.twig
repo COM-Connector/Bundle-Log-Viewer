@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-100 overflow-hidden" lang="en" data-bs-theme="dark">
+<html class="h-100 overflow-hidden" lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <link rel="icon"
@@ -14,8 +14,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" integrity="sha384-QuGBSgV5Im3DzL2z+8Ko9/hqNy/N0O7zwvXAtfd1MvPKWa/UbeLV65cfm4BV5Wgq" crossorigin="anonymous">
     <link href="{{ assets.style }}" rel="stylesheet"/>
-    {# Toggle dark mode based on system settings #}
-    <script>document.documentElement.dataset.bsTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';</script>
+    {# Follow the backend theme (light/dark/auto) if readable, otherwise stay light #}
+    <script>
+        (function () {
+            var apply = function () {
+                var theme = 'light';
+                try {
+                    var stored = localStorage.getItem('coreui-free-vue-admin-template-theme');
+                    if (stored === 'dark' || (stored === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        theme = 'dark';
+                    }
+                } catch (e) {
+                    // storage not readable, keep light
+                }
+                document.documentElement.dataset.bsTheme = theme;
+            };
+            apply();
+            window.addEventListener('storage', apply);
+        })();
+    </script>
 </head>
 <body class="h-100 overflow-hidden">
 <div id="log-viewer" class="slv-body-grid container-fluid p-0 h-100"></div>

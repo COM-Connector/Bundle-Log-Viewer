@@ -97,24 +97,29 @@ function onSearchRequest(value: string) {
                          v-model:perPage="searchStore.perPage"
                          @navigate="navigate"></search-form>
 
-            <button class="btn btn-dark ms-1"
+            <button class="btn btn-outline-secondary ms-1"
                     type="button"
                     aria-label="Auto refresh every 5 seconds"
                     title="Auto refresh every 5 seconds"
                     @click="browserStore.autorefresh = !browserStore.autorefresh; repeater.start(browserStore.autorefresh)">
                 <i class="bi" :class="{'bi-play-fill': !browserStore.autorefresh, 'bi-pause-fill': browserStore.autorefresh}"></i>
             </button>
-            <button class="btn btn-dark ms-1 me-1" type="button" aria-label="Refresh" title="Refresh" @click="load(true)">
+            <button class="btn btn-outline-secondary ms-1 me-1" type="button" aria-label="Refresh" title="Refresh" @click="load(true)">
                 <i class="bi bi-arrow-clockwise"></i>
             </button>
         </div>
 
         <main class="overflow-auto d-none d-md-block slv-loadable" v-bind:class="{ 'slv-loading': logRecordStore.loading }">
-            <div class="slv-entries list-group pt-1 pe-1 pb-3">
-                <log-record :logRecord="record"
-                            v-for="(record, index) in logRecordStore.records.logs ?? []"
-                            v-bind:key="index"
-                            @search="onSearchRequest"></log-record>
+            <div class="card slv-entries mt-1 me-1 mb-3">
+                <div class="card-header text-truncate">
+                    <i class="bi bi-file-earmark-text me-1"></i>{{ searchStore.files.join(', ') }}
+                </div>
+                <div class="list-group list-group-flush">
+                    <log-record :logRecord="record"
+                                v-for="(record, index) in logRecordStore.records.logs ?? []"
+                                v-bind:key="index"
+                                @search="onSearchRequest"></log-record>
+                </div>
             </div>
         </main>
 
@@ -141,9 +146,5 @@ function onSearchRequest(value: string) {
 .slv-content {
     display: grid;
     grid-template-rows: auto 1fr auto;
-}
-
-.slv-entries {
-    --bs-list-group-border-radius: 0;
 }
 </style>
