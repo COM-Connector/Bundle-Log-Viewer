@@ -48,7 +48,7 @@ onMounted(() => expanded.value = props.expand);
                 <i class="slv-indicator bi bi-chevron-right me-2"></i>
                 <span class="text-nowrap">{{ folder.path }}</span>
             </button>
-            <button-group ref="toggleRef" alignment="right" :split="false" :hide-on-selected="true">
+            <button-group ref="toggleRef" alignment="right" :hide-on-selected="true">
                 <template v-slot:btn_left>
                     <button type="button" class="btn btn-link text-body" aria-label="Folder menu" @click="toggleRef.toggle">
                         <i class="bi bi-three-dots-vertical"></i>

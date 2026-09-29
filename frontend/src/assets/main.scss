@@ -34,15 +34,6 @@
     align-items: stretch;
 }
 
-.slv-toggle-btn {
-    flex-grow: 0 !important;
-    width: 32px;
-
-    &::after {
-        display: none;
-    }
-}
-
 .slv-loadable {
     position: relative;
 

@@ -5,15 +5,17 @@ import SearchForm from '@/components/SearchForm.vue';
 import ParameterBag from '@/models/ParameterBag';
 import Repeater from '@/services/Repeater.ts';
 import {useBrowserStore} from '@/stores/browser.ts';
+import {useFolderStore} from '@/stores/folders';
 import {useHostsStore} from '@/stores/hosts';
 import {useLogRecordStore} from '@/stores/log_records';
 import {useSearchStore} from '@/stores/search';
-import {onMounted, onUnmounted, ref} from 'vue';
+import {computed, onMounted, onUnmounted, ref} from 'vue';
 import {type LocationQueryValueRaw, useRoute, useRouter} from 'vue-router';
 
 const router         = useRouter();
 const route          = useRoute();
 const logRecordStore = useLogRecordStore();
+const folderStore    = useFolderStore();
 const hostsStore     = useHostsStore();
 const searchStore    = useSearchStore();
 const browserStore   = useBrowserStore();
@@ -21,6 +23,11 @@ const repeater       = new Repeater(5000, () => load(false));
 
 const searchRef   = ref<InstanceType<typeof SearchForm>>()
 const offset      = ref(0);
+const fileNames   = computed(() => folderStore.folders
+        .flatMap(folder => folder.files)
+        .filter(file => searchStore.files.includes(file.identifier))
+        .map(file => file.name)
+        .join(', '));
 const badRequest  = ref(false);
 
 const navigate = () => {
@@ -112,7 +119,7 @@ function onSearchRequest(value: string) {
         <main class="overflow-auto d-none d-md-block slv-loadable" v-bind:class="{ 'slv-loading': logRecordStore.loading }">
             <div class="card slv-entries mt-1 me-1 mb-3">
                 <div class="card-header text-truncate">
-                    <i class="bi bi-file-earmark-text me-1"></i>{{ searchStore.files.join(', ') }}
+                    <i class="bi bi-file-earmark-text me-1"></i>{{ fileNames }}
                 </div>
                 <div class="list-group list-group-flush">
                     <log-record :logRecord="record"

@@ -56,7 +56,7 @@ const navigate = (identifier: string, multiSelect: boolean) => {
             <span class="flex-grow-1 text-truncate">{{ file.name }}</span>
             <span class="text-body-secondary small text-nowrap ms-2">{{ file.size_formatted }}</span>
         </a>
-        <button-group ref="toggleRef" alignment="right" :split="false" :hide-on-selected="true">
+        <button-group ref="toggleRef" alignment="right" :hide-on-selected="true">
             <template v-slot:btn_left>
                 <button type="button" class="btn btn-link btn-sm text-body" aria-label="File menu" @click="toggleRef.toggle">
                     <i class="bi bi-three-dots-vertical"></i>

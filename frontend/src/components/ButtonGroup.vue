@@ -6,7 +6,7 @@ import {onMounted, onUpdated, ref, watch} from 'vue';
 const active       = ref<boolean>(false);
 const dropdownRef  = ref();
 const clickOutside = new ClickOutside([], () => toggle(false));
-const props        = defineProps<{ alignment: 'left' | 'right', split: boolean, hideOnSelected?: boolean }>();
+const props        = defineProps<{ alignment: 'left' | 'right', hideOnSelected?: boolean }>();
 
 const toggle = (forceActive: boolean | null = null): void => {
     active.value = forceActive ?? !active.value;
@@ -29,9 +29,8 @@ defineExpose({toggle});
 </script>
 
 <template>
-    <div class="slv-btn-group" :class="{ 'btn-group': split, 'dropdown': !split }">
+    <div class="slv-btn-group" class="dropdown">
         <slot name="btn_left"></slot>
-        <slot name="btn_right"></slot>
         <ul class="dropdown-menu" :class="{'d-block': active}" ref="dropdownRef">
             <slot name="dropdown"></slot>
         </ul>
