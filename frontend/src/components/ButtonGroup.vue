@@ -29,7 +29,7 @@ defineExpose({toggle});
 </script>
 
 <template>
-    <div class="slv-btn-group" class="dropdown">
+    <div class="slv-btn-group dropdown">
         <slot name="btn_left"></slot>
         <ul class="dropdown-menu" :class="{'d-block': active}" ref="dropdownRef">
             <slot name="dropdown"></slot>
